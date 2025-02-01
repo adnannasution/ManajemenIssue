@@ -1,0 +1,39 @@
+@model NamaProyekAnda.Models.Issue
+
+@{
+    ViewData["Title"] = "Import";
+}
+
+<div class="container">
+<a class="btn btn-success btn-sm" href="~/dokumen/dataimport.xlsx">download template</a>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ExcelFile">Upload Excel File</label>
+        <input type="file" class="form-control" id="ExcelFile" name="ExcelFile" />
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary" id="submitBtn">Import</button>
+</form>
+
+</div>
+
+<script>
+    document.getElementById('ExcelFile').addEventListener('change', function() {
+        const fileInput = this;
+        const filePath = fileInput.value;
+        const allowedExtensions = /(\.xlsx)$/i;
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload a file with .xlsx format.');
+            fileInput.value = ''; // Clear the input
+            submitBtn.disabled = true; // Disable the submit button
+        } else {
+            submitBtn.disabled = false; // Enable the submit button if the file is valid
+        }
+    });
+</script>
+
+
+

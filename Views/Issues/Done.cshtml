@@ -1,0 +1,76 @@
+@model IEnumerable<NamaProyekAnda.Models.Issue>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    
+    <!-- Bootstrap DataTables JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap4.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap4.css">
+
+
+
+</head>
+
+<div class="container">
+<h2>Issue Done</h2>
+
+<div class="shadow p-4 rounded">
+<table class="table"  id="example">
+    <thead>
+        <tr>
+            <th>ID</th>
+         
+            <th>Tgl</th>
+            <th>Jenis</th>
+            <th>Detail Issue</th>
+            <th>Nama Brand</th>
+            <th>Nama Vendor</th>
+            <th>Jenis Vendor</th>
+            <th>Status</th>
+              <th>PIC</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@item.Id</td>
+       
+                <td>@item.Tgl</td>
+                <td>@item.Jenis</td>
+                <td>@item.DetailIssue, <br><b>Tindakan : @item.Tindakan</b></td>
+                <td>@item.NamaBrand</td>
+                <td>@item.NamaVendor</td>
+                <td>@item.JenisVendor</td>
+         
+                <td><span class="badge bg-success">@item.Status</span></td>
+                          <td>@item.Pic</td>
+      
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+</div>
+
+
+<script>
+    new DataTable('#example');
+</script>

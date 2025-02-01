@@ -1,0 +1,38 @@
+@model IEnumerable<NamaProyekAnda.Models.Tindakan>
+
+@{
+    ViewData["Title"] = "Tindakan List";
+    var idissue = ViewBag.Idissue as int?; // Retrieve the Idissue from ViewBag
+}
+
+<h2>Tindakan List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Idissue)</th>
+            <th>@Html.DisplayNameFor(model => model.Tgltindakan)</th>
+            <th>@Html.DisplayNameFor(model => model.Tindakanku)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Idissue)</td>
+            <td>@Html.DisplayFor(modelItem => item.Tgltindakan)</td>
+            <td>@Html.DisplayFor(modelItem => item.Tindakanku)</td>
+            <td>
+                <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (idissue.HasValue)
+{
+    <a asp-action="Create" asp-route-idissue="@idissue" class="btn btn-primary">Create New Tindakan</a>
+}

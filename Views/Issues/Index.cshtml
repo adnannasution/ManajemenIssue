@@ -1,0 +1,143 @@
+@model IEnumerable<NamaProyekAnda.Models.Issue>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    
+    <!-- Bootstrap DataTables JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap4.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap4.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+
+
+<h2>List Issue</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Issue</a>
+    <a asp-action="Import" class="btn btn-primary">Import</a>
+</p>
+
+<div class=" p-4 rounded">
+
+
+<table class="table table-striped" id="example">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tgl</th>
+            <th>Jenis</th>
+            <th>Detail Issue</th>
+            <th>Brand</th>
+            <th>Vendor</th>
+            <th>Jenis Vendor</th>
+            <th>Status</th>
+            <th>PIC</th>
+            <th>Screenshot</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Tgl</td>
+                <td>@item.Jenis</td>
+                <td>@item.DetailIssue, <br><b>Tindakan : @item.Tindakan</b></td>
+                <td>@item.NamaBrand</td>
+                <td>@item.NamaVendor</td>
+                <td>@item.JenisVendor</td>
+                <td>
+                    @if(item.Status == "progress")
+                    {
+                        <span class="badge bg-info">@item.Status</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">@item.Status</span>
+                    }
+                </td>
+                <td>@item.Pic</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageData))
+                    {
+                        <!-- Gambar yang bisa diklik untuk membuka modal -->
+                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#imageModal" 
+                                data-image="@item.ImageData" data-id="@item.Id">
+                            <i class="fas fa-search"></i> view
+                        </button>
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal untuk menampilkan gambar yang lebih besar -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Screenshot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="Screenshot" id="modalImage" style="width: 100%; height: auto;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        $('#imageModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Tombol yang diklik untuk membuka modal
+            var imageSrc = button.data('image'); // Ambil data gambar dari tombol
+            var modal = $(this);
+            modal.find('.modal-title').text('Screenshot ID: ' + button.data('id')); // Setel judul modal
+            modal.find('#modalImage').attr('src', imageSrc); // Setel sumber gambar
+        });
+    </script>
+
+
+
+</div>
+
+
+<script>
+    new DataTable('#example');
+</script>

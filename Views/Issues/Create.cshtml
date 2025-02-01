@@ -1,0 +1,277 @@
+@model NamaProyekAnda.Models.Issue
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+ <style>
+        #canvas-container {
+            margin-top: 10px;
+            position: relative;
+            border: 0px solid #ddd;
+            max-width: 150%;
+            max-height: 550px;
+        }
+        #screenshot-preview {
+            max-width: 150%;
+            max-height: 550px;
+        }
+        #draw-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+
+
+
+<div class="container">
+<h2>Create New Issue</h2>
+
+<h4>Issue</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+ 
+            <div class="form-group">
+                <label asp-for="Tgl" class="control-label"></label>
+                <input asp-for="Tgl" class="form-control" type="date" />
+                <span asp-validation-for="Tgl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jenis" class="control-label"></label>
+                <select asp-for="Jenis" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="Sudah lama tidak di follow up">Sudah lama tidak di follow up</option>
+                    <option value="Enhancement">Enhancement</option>
+                    <option value="Error aplikasi">Error aplikasi</option>
+                    <option value="Tidak bisa login">Tidak bisa login</option>
+                    <option value="Sudah terdaftar di close brand">Sudah terdaftar di close brand</option>
+                    <option value="Brand tidak ada halaman PIC yang dituju">Brand tidak ada halaman PIC yang dituju</option>
+                    <option value="Add user ebvl">Add user ebvl</option>
+                    <option value="Sudah terdaftar di EBVL 1.0">Sudah terdaftar di EBVL 1.0</option>
+                    <option value="Lainnya">Lainnya</option>
+
+                </select>
+                <span asp-validation-for="Jenis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DetailIssue" class="control-label"></label>
+                <input asp-for="DetailIssue" class="form-control" />
+                <span asp-validation-for="DetailIssue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NamaBrand" class="control-label"></label>
+                <input asp-for="NamaBrand" class="form-control" />
+                <span asp-validation-for="NamaBrand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NamaVendor" class="control-label"></label>
+                <input asp-for="NamaVendor" class="form-control" />
+                <span asp-validation-for="NamaVendor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JenisVendor" class="control-label"></label>
+                <select asp-for="JenisVendor" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="Agen">Agen</option>
+                    <option value="Manufacture">Manufacture</option>
+                </select>
+                <span asp-validation-for="JenisVendor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="new issue">new issue</option>
+                    <option value="progress">progress</option>
+                    <option value="done">done</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Pic" class="control-label"></label>
+                <input asp-for="Pic" class="form-control" />
+                <span asp-validation-for="Pic" class="text-danger"></span>
+            </div>
+
+@* <div class="form-group">
+    <label for="ImageData">Upload Screenshot</label>
+    <input type="hidden" id="ImageData" name="ImageData" />
+    <input type="text" id="screenshot-input" class="form-control" placeholder="Paste your screenshot here..." />
+    <br>
+    <img id="screenshot-preview" src="" alt="Screenshot Preview" style="width: 100%; display: none;" />
+    <button type="button" id="remove-image" class="btn" style="display: none;">X</button>
+    <span asp-validation-for="ImageData" class="text-danger"></span>
+</div> *@
+
+<div class="form-group">
+    <label for="ImageData">Upload Screenshot</label>
+    <input type="hidden" id="ImageData" name="ImageData" />
+    <input type="text" id="screenshot-input" class="form-control" placeholder="Paste your screenshot here..." />
+    <br>
+    <div id="canvas-container" style="position: relative; display: none;" title="Coret image sebagai penanda">
+        <img id="screenshot-preview" src="" alt="Screenshot Preview"  style="display: none;" />
+        <canvas id="draw-canvas" style="position: absolute; top: 0; left: 0;"></canvas>
+    </div>
+    <button type="button" id="remove-image" class="btn" style="display: none;">X</button>
+    <span asp-validation-for="ImageData" class="text-danger"></span>
+</div>
+
+
+
+
+            
+            <div class="form-group pt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />  <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+@* <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('screenshot-input');
+        const preview = document.getElementById('screenshot-preview');
+        const base64Input = document.getElementById('ImageData');
+        const removeButton = document.getElementById('remove-image');
+
+        // Handle paste event
+        input.addEventListener('paste', (event) => {
+            const items = event.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.startsWith('image/')) {
+                    const file = items[i].getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        base64Input.value = e.target.result; // Set base64 data to hidden input
+                        preview.style.display = 'block'; // Show image preview
+                        removeButton.style.display = 'inline'; // Show remove button
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Handle remove button click
+        removeButton.addEventListener('click', () => {
+            preview.src = ''; // Clear image preview
+            preview.style.display = 'none'; // Hide image preview
+            base64Input.value = ''; // Clear base64 data from hidden input
+            removeButton.style.display = 'none'; // Hide remove button
+        });
+    });
+</script> *@
+
+  <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('screenshot-input');
+            const preview = document.getElementById('screenshot-preview');
+            const canvas = document.getElementById('draw-canvas');
+            const ctx = canvas.getContext('2d');
+            const base64Input = document.getElementById('ImageData');
+            const removeButton = document.getElementById('remove-image');
+            const canvasContainer = document.getElementById('canvas-container');
+            let isDrawing = false;
+
+            // Set the line width for drawing
+            ctx.lineWidth = 15; // Increase line width for thicker lines
+            ctx.strokeStyle = 'red'; // Optional: Set the line color
+            ctx.lineCap = 'round'; // Optional: Make the end of lines rounded
+
+            // Handle paste event
+            input.addEventListener('paste', (event) => {
+                const items = event.clipboardData.items;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.startsWith('image/')) {
+                        const file = items[i].getAsFile();
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            base64Input.value = e.target.result; // Set base64 data to hidden input
+                            preview.style.display = 'block'; // Show image preview
+                            removeButton.style.display = 'inline'; // Show remove button
+                            canvasContainer.style.display = 'block'; // Show canvas container
+
+                            // Wait for image to load before adjusting canvas
+                            preview.onload = () => {
+                                // Set canvas size to match the image's natural size
+                                canvas.width = preview.naturalWidth;
+                                canvas.height = preview.naturalHeight;
+                                canvas.style.width = `${preview.width}px`;
+                                canvas.style.height = `${preview.height}px`;
+                            };
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // Handle drawing on canvas
+            canvas.addEventListener('mousedown', (event) => {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(event.offsetX * (canvas.width / canvas.clientWidth), event.offsetY * (canvas.height / canvas.clientHeight));
+            });
+
+            canvas.addEventListener('mousemove', (event) => {
+                if (isDrawing) {
+                    ctx.lineTo(event.offsetX * (canvas.width / canvas.clientWidth), event.offsetY * (canvas.height / canvas.clientHeight));
+                    ctx.stroke();
+                }
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDrawing = false;
+                saveCanvasToBase64(); // Save the drawing to the hidden input
+            });
+
+            canvas.addEventListener('mouseout', () => {
+                isDrawing = false;
+            });
+
+            // Save canvas drawing to base64 and store it in hidden input
+            function saveCanvasToBase64() {
+                const combinedCanvas = document.createElement('canvas');
+                combinedCanvas.width = canvas.width;
+                combinedCanvas.height = canvas.height;
+                const combinedCtx = combinedCanvas.getContext('2d');
+
+                // Draw the base image first
+                combinedCtx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+
+                // Draw the user's drawing on top of the base image
+                combinedCtx.drawImage(canvas, 0, 0);
+
+                // Convert the combined canvas to base64
+                base64Input.value = combinedCanvas.toDataURL('image/png');
+            }
+
+            // Handle remove button click
+            removeButton.addEventListener('click', () => {
+                preview.src = ''; // Clear image preview
+                preview.style.display = 'none'; // Hide image preview
+                canvasContainer.style.display = 'none'; // Hide canvas container
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                base64Input.value = ''; // Clear base64 data from hidden input
+                removeButton.style.display = 'none'; // Hide remove button
+            });
+        });
+    </script>

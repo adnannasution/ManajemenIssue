@@ -1,0 +1,160 @@
+@model NamaProyekAnda.Models.Issue
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+
+<h2>Edit Issue</h2>
+
+<h4>Issue</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            
+     
+            <div class="form-group">
+                <label asp-for="Tgl" class="control-label"></label>
+                <input asp-for="Tgl" class="form-control" type="date" />
+                <span asp-validation-for="Tgl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jenis" class="control-label"></label>
+                <select asp-for="Jenis" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="Sudah lama tidak di follow up">Sudah lama tidak di follow up</option>
+                    <option value="Enhancement">Enhancement</option>
+                    <option value="Error aplikasi">Error aplikasi</option>
+                    <option value="Tidak bisa login">Tidak bisa login</option>
+                    <option value="Sudah terdaftar di close brand">Sudah terdaftar di close brand</option>
+        <option value="Brand tidak ada halaman PIC yang dituju">Brand tidak ada halaman PIC yang dituju</option>
+                    <option value="Add user ebvl">Add user ebvl</option>
+                    <option value="Sudah terdaftar di EBVL 1.0">Sudah terdaftar di EBVL 1.0</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+                <span asp-validation-for="Jenis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DetailIssue" class="control-label"></label>
+                <input asp-for="DetailIssue" class="form-control" />
+                <span asp-validation-for="DetailIssue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NamaBrand" class="control-label"></label>
+                <input asp-for="NamaBrand" class="form-control" />
+                <span asp-validation-for="NamaBrand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NamaVendor" class="control-label"></label>
+                <input asp-for="NamaVendor" class="form-control" />
+                <span asp-validation-for="NamaVendor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JenisVendor" class="control-label"></label>
+                <select asp-for="JenisVendor" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="Agen">Agen</option>
+                    <option value="Manufacture">Manufacture</option>
+                </select>
+                <span asp-validation-for="JenisVendor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Tindakan" class="control-label"></label>
+                <input asp-for="Tindakan" class="form-control" />
+                <span asp-validation-for="Tindakan" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="new issue">new</option>
+                    <option value="progress">progress</option>
+                    <option value="done">done</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Pic" class="control-label"></label>
+                <input asp-for="Pic" class="form-control" />
+                <span asp-validation-for="Pic" class="text-danger"></span>
+            </div>
+
+<div class="form-group">
+    <label for="ImageData">Upload Screenshot</label>
+    <input type="hidden" id="ImageData" name="ImageData" value="@Model.ImageData" />
+    <input type="text" id="screenshot-input" class="form-control" placeholder="Paste your screenshot here..." />
+    <br>
+    <img id="screenshot-preview" src="@Model.ImageData" alt="Screenshot Preview" style="width: 70%; display: @(Model.ImageData == null ? "none" : "block");" />
+    <button type="button" id="remove-image" class="btn" style="display: @(Model.ImageData == null ? "none" : "inline");">X</button>
+    <span asp-validation-for="ImageData" class="text-danger"></span>
+</div>
+
+
+
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('screenshot-input');
+    const preview = document.getElementById('screenshot-preview');
+    const base64Input = document.getElementById('ImageData');
+    const removeButton = document.getElementById('remove-image');
+
+    // Show existing image if there is one
+    if (base64Input.value) {
+        preview.src = base64Input.value;
+        preview.style.display = 'block'; // Show image preview
+        removeButton.style.display = 'inline'; // Show remove button
+    }
+
+    // Handle paste event
+    input.addEventListener('paste', (event) => {
+        const items = event.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.startsWith('image/')) {
+                const file = items[i].getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    base64Input.value = e.target.result; // Set base64 data to hidden input
+                    preview.style.display = 'block'; // Show image preview
+                    removeButton.style.display = 'inline'; // Show remove button
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    // Handle remove button click
+    removeButton.addEventListener('click', () => {
+        preview.src = ''; // Clear image preview
+        preview.style.display = 'none'; // Hide image preview
+        base64Input.value = ''; // Clear base64 data from hidden input
+        removeButton.style.display = 'none'; // Hide remove button
+    });
+});
+
+</script>

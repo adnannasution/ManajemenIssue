@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Issue Chart by Jenis";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <canvas id="jenisChart"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("ChartData", "Graf")',
+                method: 'GET',
+                success: function (data) {
+                    var ctx = document.getElementById('jenisChart').getContext('2d');
+                    var jenisLabels = data.map(function (item) { return item.Jenis; });
+                    var jenisCounts = data.map(function (item) { return item.Count; });
+
+                    var chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: jenisLabels,
+                            datasets: [{
+                                label: 'Number of Issues by Jenis',
+                                data: jenisCounts,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

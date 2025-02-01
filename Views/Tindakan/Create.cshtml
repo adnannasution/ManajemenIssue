@@ -1,0 +1,40 @@
+@model NamaProyekAnda.Models.Tindakan
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create Tindakan</h2>
+
+<h4>Tindakan</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="Idissue" class="control-label"></label>
+                <input asp-for="Idissue" class="form-control" />
+                <span asp-validation-for="Idissue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tgltindakan" class="control-label"></label>
+                <input asp-for="Tgltindakan" class="form-control" type="date" />
+                <span asp-validation-for="Tgltindakan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tindakanku" class="control-label"></label>
+                <input asp-for="Tindakanku" class="form-control" />
+                <span asp-validation-for="Tindakanku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
